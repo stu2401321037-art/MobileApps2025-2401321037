@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NumisTracker</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="banknotes">Banknotes</string>
+    <string name="coins">Coins</string>
+    <string name="collection">Collection</string>
+</resources>
