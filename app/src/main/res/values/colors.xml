@@ -6,6 +6,6 @@
     <color name="surface_color">#FFFFFF</color>
     <color name="gold">#E5BC60</color>
     <color name="button_start">#FFF1C2</color>
-    <color name="button_end">#D6B65C</color>
-    <color name="button_border">#CCBA1F</color>
+    <color name="button_end">#F8C954</color>
+    <color name="button_border">#473E1B</color>
 </resources>
