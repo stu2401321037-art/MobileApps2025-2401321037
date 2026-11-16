@@ -5,12 +5,12 @@
     <corners android:radius="20dp" />
 
     <gradient
-        android:startColor="#80F5F5F5"
-        android:endColor="#809E9E9E"
+        android:startColor="@color/button_start"
+        android:endColor="@color/button_end"
         android:angle="45" />
 
     <stroke
-        android:width="5dp"
-        android:color="#80616161" />
+        android:width="2dp"
+        android:color="@color/button_border" />
 
 </shape>

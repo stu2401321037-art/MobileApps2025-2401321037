@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_color">#211E1A</color>
+    <color name="text_color">#FFFFFF</color>
+    <color name="surface_color">#39332C</color>
+    <color name="gold">#E5BC60</color>
+
+    <color name="button_start">#66583A</color>
+    <color name="button_end">#39332C</color>
+    <color name="button_border">#E5BC60</color>
+</resources>

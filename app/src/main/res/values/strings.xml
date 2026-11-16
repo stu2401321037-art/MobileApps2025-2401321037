@@ -4,4 +4,5 @@
     <string name="banknotes">Banknotes</string>
     <string name="coins">Coins</string>
     <string name="collection">Collection</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>
