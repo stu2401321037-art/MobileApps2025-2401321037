@@ -27,6 +27,7 @@
             android:layout_marginStart="10dp"
             android:gravity="center"
             android:text="@string/home_screen"
+            android:textColor="@color/gold"
             android:textSize="40sp"
             android:textStyle="italic" />
 

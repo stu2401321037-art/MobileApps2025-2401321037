@@ -10,6 +10,8 @@ import androidx.core.view.WindowInsetsCompat;
 import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
+import android.content.Intent;
+import android.widget.Button;
 
 public class MainScreen extends AppCompatActivity {
 
@@ -18,6 +20,20 @@ public class MainScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         WindowCompat.enableEdgeToEdge(getWindow());
         setContentView(R.layout.activity_main_screen);
+
+        Button button = findViewById(R.id.button);
+
+        button.setOnClickListener(v -> {
+            Intent intent = new Intent(MainScreen.this, CoinsActivity.class);
+            startActivity(intent);
+        });
+
+        Button buttonBanknotes = findViewById(R.id.button2); // сменете с реалното ID от activity_main_screen.xml
+
+        buttonBanknotes.setOnClickListener(v -> {
+            Intent intent = new Intent(MainScreen.this, banknotes.class);
+            startActivity(intent);
+        });
 
         SharedPreferences preferences =
                 getSharedPreferences("AppSettings", MODE_PRIVATE);
