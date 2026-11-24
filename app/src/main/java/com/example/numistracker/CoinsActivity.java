@@ -1,7 +1,6 @@
 package com.example.numistracker;
 
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,17 +22,26 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.example.numistracker.data.DatabaseHelper;
+import com.example.numistracker.di.AppContainer;
+import com.example.numistracker.viewmodel.FormViewModel;
+
 
 public class CoinsActivity extends AppCompatActivity {
 
-    private DatabaseHelper dbHelper;
-    private SQLiteDatabase database;
+    private FormViewModel formViewModel;
+    private long editingId = -1;
 
+
+    private PhotoCaptureHelper photoHelper;
     private void applySavedTheme() {
-        SharedPreferences preferences = getSharedPreferences("AppSettings", MODE_PRIVATE);
-        boolean isDark = preferences.getBoolean("dark_mode", false);
+        SharedPreferences preferences =
+                getSharedPreferences("AppSettings", MODE_PRIVATE);
+
+        boolean isDark =
+                preferences.getBoolean("dark_mode", false);
+
         int desiredMode = isDark
                 ? AppCompatDelegate.MODE_NIGHT_YES
                 : AppCompatDelegate.MODE_NIGHT_NO;
@@ -42,20 +52,33 @@ public class CoinsActivity extends AppCompatActivity {
     }
 
     private ArrayAdapter<CharSequence> createConditionAdapter() {
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                getResources().getStringArray(R.array.coin_conditions)
-        ) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull ViewGroup parent) {
-                TextView view = (TextView) super.getView(position, convertView, parent);
-                view.setTextColor(ContextCompat.getColor(parent.getContext(), R.color.gold));
-                return view;
-            }
-        };
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ArrayAdapter<CharSequence> adapter =
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_item,
+                        getResources().getStringArray(R.array.coin_conditions)
+                ) {
+                    @NonNull
+                    @Override
+                    public View getView(
+                            int position,
+                            View convertView,
+                            @NonNull ViewGroup parent) {
+
+                        TextView view = (TextView) super.getView(
+                                position, convertView, parent);
+
+                        view.setTextColor(ContextCompat.getColor(
+                                parent.getContext(), R.color.gold));
+
+                        return view;
+                    }
+                };
+
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+
         return adapter;
     }
 
@@ -63,159 +86,304 @@ public class CoinsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         applySavedTheme();
         super.onCreate(savedInstanceState);
+
         WindowCompat.enableEdgeToEdge(getWindow());
         setContentView(R.layout.activity_coins);
 
-        dbHelper = new DatabaseHelper(this);
-        database = dbHelper.getWritableDatabase();
+        ImageView imagePreview =
+                findViewById(R.id.imagePreview);
 
-        ImageButton button4 = findViewById(R.id.button4);
-        button4.setOnClickListener(v -> finish());
+        LinearLayout photoContainer =
+                findViewById(R.id.photoContainer);
 
-        Spinner spinnerCondition = findViewById(R.id.spinnerCondition);
+        photoHelper = new PhotoCaptureHelper(
+                this,
+                imagePreview
+        );
+        photoHelper.restoreState(savedInstanceState);
+
+        photoContainer.setOnClickListener(
+                v -> photoHelper.openCamera()
+        );
+
+
+        AppContainer container = AppContainer.getInstance(this);
+        formViewModel = new ViewModelProvider(
+                this,
+                new FormViewModel.Factory(container.getRepository())
+        ).get(FormViewModel.class);
+
+        ImageButton buttonBack =
+                findViewById(R.id.button4);
+
+        Spinner spinnerCondition =
+                findViewById(R.id.spinnerCondition);
+
+        EditText editCountry =
+                findViewById(R.id.editCountry);
+
+        EditText editYear =
+                findViewById(R.id.editYear);
+
+        EditText editDenomination =
+                findViewById(R.id.editDenomination);
+
+        EditText editCurrency =
+                findViewById(R.id.editCurrency);
+
+        EditText editQuantity =
+                findViewById(R.id.editQuantity);
+
+        EditText editEstimatedValue =
+                findViewById(R.id.editEstimatedValue);
+
+        Button buttonSaveCoin =
+                findViewById(R.id.buttonSaveCoin);
+
+        buttonBack.setOnClickListener(v -> finish());
+
         spinnerCondition.setAdapter(createConditionAdapter());
 
-        EditText editCountry = findViewById(R.id.editCountry);
-        EditText editYear = findViewById(R.id.editYear);
-        EditText editDenomination = findViewById(R.id.editDenomination);
-        EditText editCurrency = findViewById(R.id.editCurrency);
-        EditText editQuantity = findViewById(R.id.editQuantity);
-        EditText editEstimatedValue = findViewById(R.id.editEstimatedValue);
-        Button buttonSaveCoin = findViewById(R.id.buttonSaveCoin);
+        editingId = getIntent().getLongExtra(
+                ItemsListActivity.EXTRA_ID, -1);
+
+        formViewModel.getLoadResult().observe(this, result -> {
+            if (result == null) return;
+            if (result.error != null || result.values == null) {
+                Toast.makeText(this, "Coin not found", Toast.LENGTH_SHORT).show();
+                finish();
+                return;
+            }
+            String[] values = result.values;
+            editCountry.setText(values[0]);
+            editYear.setText(values[1]);
+            editDenomination.setText(values[2]);
+            editCurrency.setText(values[3]);
+            editQuantity.setText(values[5]);
+            editEstimatedValue.setText(values[6]);
+            for (int i = 0; i < spinnerCondition.getCount(); i++) {
+                if (spinnerCondition.getItemAtPosition(i).toString().equals(values[4])) {
+                    spinnerCondition.setSelection(i);
+                    break;
+                }
+            }
+            buttonSaveCoin.setEnabled(true);
+        });
+
+        formViewModel.getSaveResult().observe(this, result -> {
+            if (result == null || isFinishing() || isDestroyed()) return;
+            buttonSaveCoin.setEnabled(true);
+            if (result.success) {
+                Toast.makeText(this,
+                        editingId == -1 ? "Coin saved successfully" : "Coin updated successfully",
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                if (result.id > 0) {
+                    editingId = result.id;
+                    buttonSaveCoin.setText("Save Changes");
+                }
+                Toast.makeText(this, result.error, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        if (editingId != -1) {
+            buttonSaveCoin.setText("Save Changes");
+            buttonSaveCoin.setEnabled(false);
+            formViewModel.load(editingId, true);
+        }
 
         buttonSaveCoin.setOnClickListener(v -> {
-            String name = "";
-            String country = editCountry.getText().toString().trim();
-            String yearStr = editYear.getText().toString().trim();
-            String denomination = editDenomination.getText().toString().trim();
-            String currency = editCurrency.getText().toString().trim();
-            String condition = spinnerCondition.getSelectedItem() != null
-                    ? spinnerCondition.getSelectedItem().toString()
-                    : "";
-            String qtyStr = editQuantity.getText().toString().trim();
-            String valStr = editEstimatedValue.getText().toString().trim();
+
+            String country =
+                    editCountry.getText().toString().trim();
+
+            String yearStr =
+                    editYear.getText().toString().trim();
+
+            String denomination =
+                    editDenomination.getText().toString().trim();
+
+            String currency =
+                    editCurrency.getText().toString().trim();
+
+            String condition =
+                    spinnerCondition.getSelectedItem() != null
+                            ? spinnerCondition.getSelectedItem().toString()
+                            : "";
+
+            String quantityStr =
+                    editQuantity.getText().toString().trim();
+
+            String valueStr =
+                    editEstimatedValue.getText().toString().trim();
 
             if (country.isEmpty()) {
-                editCountry.setError("Enter country");
-                editCountry.requestFocus();
+                showError(editCountry, "Enter country");
                 return;
             }
 
             if (yearStr.isEmpty()) {
-                editYear.setError("Enter year");
-                editYear.requestFocus();
+                showError(editYear, "Enter year");
                 return;
             }
 
             int year;
+
             try {
                 year = Integer.parseInt(yearStr);
             } catch (NumberFormatException e) {
-                editYear.setError("Invalid year");
-                editYear.requestFocus();
+                showError(editYear, "Invalid year");
                 return;
             }
+
             if (year <= 0) {
-                editYear.setError("Year must be greater than 0");
-                editYear.requestFocus();
+                showError(editYear, "Year must be greater than 0");
                 return;
             }
 
             if (denomination.isEmpty()) {
-                editDenomination.setError("Enter denomination");
-                editDenomination.requestFocus();
+                showError(editDenomination, "Enter denomination");
                 return;
             }
 
-            double denomValue;
+            double denominationValue;
+
             try {
-                denomValue = Double.parseDouble(denomination);
+                denominationValue = Double.parseDouble(
+                        denomination.replace(',', '.'));
             } catch (NumberFormatException e) {
-                editDenomination.setError("Invalid denomination");
-                editDenomination.requestFocus();
+                showError(editDenomination, "Invalid denomination");
                 return;
             }
-            if (denomValue <= 0) {
-                editDenomination.setError("Denomination must be greater than 0");
-                editDenomination.requestFocus();
+
+            if (!Double.isFinite(denominationValue)
+                    || denominationValue <= 0) {
+
+                showError(
+                        editDenomination,
+                        "Denomination must be positive");
                 return;
             }
 
             if (currency.isEmpty()) {
-                editCurrency.setError("Enter currency");
-                editCurrency.requestFocus();
+                showError(editCurrency, "Enter currency");
                 return;
             }
 
             if (condition.isEmpty()) {
-                Toast.makeText(this, "Select condition", Toast.LENGTH_SHORT).show();
+                Toast.makeText(
+                        this,
+                        "Select condition",
+                        Toast.LENGTH_SHORT
+                ).show();
                 return;
             }
 
-            if (qtyStr.isEmpty()) {
-                editQuantity.setError("Enter quantity");
-                editQuantity.requestFocus();
+            if (quantityStr.isEmpty()) {
+                showError(editQuantity, "Enter quantity");
                 return;
             }
 
             int quantity;
+
             try {
-                quantity = Integer.parseInt(qtyStr);
+                quantity = Integer.parseInt(quantityStr);
             } catch (NumberFormatException e) {
-                editQuantity.setError("Invalid quantity");
-                editQuantity.requestFocus();
+                showError(editQuantity, "Invalid quantity");
                 return;
             }
+
             if (quantity < 1) {
-                editQuantity.setError("Quantity must be at least 1");
-                editQuantity.requestFocus();
+                showError(
+                        editQuantity,
+                        "Quantity must be at least 1");
                 return;
             }
 
-            double estimatedValue = 0.0;
-            if (!valStr.isEmpty()) {
+            Double estimatedValue = null;
+
+            if (!valueStr.isEmpty()) {
                 try {
-                    estimatedValue = Double.parseDouble(valStr);
+                    estimatedValue = Double.parseDouble(
+                            valueStr.replace(',', '.'));
                 } catch (NumberFormatException e) {
-                    editEstimatedValue.setError("Invalid estimated value");
-                    editEstimatedValue.requestFocus();
+                    showError(
+                            editEstimatedValue,
+                            "Invalid estimated value");
                     return;
                 }
-                if (estimatedValue < 0) {
-                    editEstimatedValue.setError("Estimated value cannot be negative");
-                    editEstimatedValue.requestFocus();
+
+                if (!Double.isFinite(estimatedValue)
+                        || estimatedValue < 0) {
+
+                    showError(
+                            editEstimatedValue,
+                            "Estimated value cannot be negative");
                     return;
                 }
             }
 
-            long rowId = dbHelper.insertCoin(name, country, year, denomination, currency, "", condition, 0.0, estimatedValue, quantity, "", false
+            String name =
+                    denomination + " " + currency + " (" + year + ")";
+
+            final int finalYear = year;
+            final int finalQuantity = quantity;
+            final Double finalEstimatedValue = estimatedValue;
+
+            buttonSaveCoin.setEnabled(false);
+            formViewModel.save(
+                    editingId,
+                    true,
+                    name,
+                    country,
+                    finalYear,
+                    denomination,
+                    currency,
+                    condition,
+                    finalEstimatedValue,
+                    finalQuantity,
+                    photoHelper.getNewPhotoPaths()
             );
-
-            if (rowId != -1) {
-                Toast.makeText(this, "Saved coin #" + rowId, Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "Error saving coin", Toast.LENGTH_SHORT).show();
-            }
         });
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setupWindowInsets();
+    }
+
+    private void showError(EditText field, String message) {
+        field.setError(message);
+        field.requestFocus();
+    }
+
+    private void setupWindowInsets() {
+
+        View root = findViewById(R.id.main);
+
+        final int left = root.getPaddingLeft();
+        final int top = root.getPaddingTop();
+        final int right = root.getPaddingRight();
+        final int bottom = root.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+                root, (view, windowInsets) -> {
+
+                    Insets systemBars = windowInsets.getInsets(
+                            WindowInsetsCompat.Type.systemBars());
+
+                    view.setPadding(
+                            left + systemBars.left,
+                            top + systemBars.top,
+                            right + systemBars.right,
+                            bottom + systemBars.bottom
+                    );
+
+                    return windowInsets;
+                });
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (database != null && database.isOpen()) {
-            database.close();
-        }
-
-        if (dbHelper != null) {
-            dbHelper.close();
-        }
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        photoHelper.saveState(outState);
+        super.onSaveInstanceState(outState);
     }
 }

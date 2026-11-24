@@ -6,4 +6,13 @@
     <color name="button_start">#9966583A</color>
     <color name="button_end">#9939332C</color>
     <color name="button_border">#E5BC60</color>
+    <color name="screen_bg">#121418</color>
+    <color name="panel_bg">#1D2026</color>
+    <color name="field_bg">#2A2E35</color>
+    <color name="text_primary">#F1EDE4</color>
+    <color name="text_secondary">#B9B7B2</color>
+    <color name="label_accent">#D9B76A</color>
+    <color name="button_bg">#D9B76A</color>
+    <color name="button_text">#17191D</color>
+    <color name="panel_stroke">#34383E</color>
 </resources>
