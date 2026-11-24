@@ -1,57 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background"
-    android:fillViewport="true">
+    android:background="@color/background_color"
+    android:fillViewport="true"
+    android:clipToPadding="false"
+    tools:context=".CoinsActivity">
 
     <LinearLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#B812100E"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:gravity="center"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="4"
-            android:text="@string/coins"
-            android:textColor="@color/gold"
-            android:textSize="27sp"
-            android:textStyle="bold" />
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@string/coins"
+                android:textColor="@color/gold"
+                android:textSize="27sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/button4"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="start|center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/back_button"
+                android:src="@drawable/back_arrow"
+                android:scaleType="centerInside" />
+
+        </FrameLayout>
 
         <LinearLayout
             android:id="@+id/photoContainer"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/button"
-            android:gravity="center"
+            android:layout_height="130dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/surface_color"
+            android:elevation="3dp"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:gravity="center"
+            android:padding="10dp">
 
             <ImageView
                 android:id="@+id/imagePreview"
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@android:drawable/ic_menu_camera"
                 android:contentDescription="@string/coin_photos_description"
-                android:scaleType="centerCrop"
-                android:src="@android:drawable/ic_menu_camera" />
+                android:scaleType="centerInside" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:shadowColor="#000000"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="3"
+                android:layout_marginTop="4dp"
                 android:text="@string/add_photos"
                 android:textColor="@color/gold"
                 android:textSize="16sp"
@@ -60,267 +73,230 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:shadowColor="#000000"
-                android:shadowDx="1"
-                android:shadowDy="1"
-                android:shadowRadius="2"
+                android:layout_marginTop="2dp"
                 android:text="@string/coin_photos_description"
                 android:textColor="@color/text_color"
-                android:textSize="11sp" />
+                android:textSize="12sp"
+                android:gravity="center" />
 
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="3"
+            android:layout_marginBottom="5dp"
             android:text="@string/country"
             android:textColor="@color/gold"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editCountry"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="7dp"
-            android:autofillHints="name"
-            android:background="#E61E1B18"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:layout_marginBottom="14dp"
+            android:background="@color/surface_color"
             android:hint="@string/enter_country"
             android:inputType="textCapWords"
-            android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BDB49E" />
+            android:padding="12dp"
+            android:textColor="@color/text_color"
+            android:importantForAutofill="no" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
                 android:layout_weight="1"
+                android:layout_marginEnd="6dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/year"
                     android:textColor="@color/gold"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editYear"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:autofillHints="name"
-                    android:background="#E61E1B18"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
+                    android:background="@color/surface_color"
                     android:hint="@string/coin_year_hint"
                     android:inputType="number"
-                    android:padding="10dp"
                     android:singleLine="true"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#BDB49E" />
+                    android:padding="12dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/gold"
+                    android:importantForAutofill="no" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
                 android:layout_weight="1"
+                android:layout_marginStart="6dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/denomination"
                     android:textColor="@color/gold"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editDenomination"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:autofillHints="name"
-                    android:background="#E61E1B18"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
+                    android:background="@color/surface_color"
                     android:hint="@string/coin_denomination_hint"
                     android:inputType="numberDecimal"
-                    android:padding="10dp"
                     android:singleLine="true"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#BDB49E" />
+                    android:padding="12dp"
+                    android:textColor="@color/text_color"
+                    android:textColorHint="@color/gold"
+                    android:importantForAutofill="no" />
 
             </LinearLayout>
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="3dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="3"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/currency"
             android:textColor="@color/gold"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editCurrency"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="7dp"
-            android:autofillHints="name"
-            android:background="#E61E1B18"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:layout_marginBottom="14dp"
+            android:background="@color/surface_color"
             android:hint="@string/currency_example"
             android:inputType="textCapCharacters"
-            android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BDB49E" />
+            android:padding="12dp"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/gold"
+            android:importantForAutofill="no" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
                 android:layout_weight="1"
+                android:layout_marginEnd="6dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/condition"
                     android:textColor="@color/gold"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/spinnerCondition"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="#E61E1B18"
-                    android:padding="5dp" />
+                    android:layout_height="52dp"
+                    android:background="@color/surface_color"
+                    android:padding="8dp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
                 android:layout_weight="1"
+                android:layout_marginStart="6dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:shadowColor="#000000"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
-                    android:shadowRadius="3"
+                    android:layout_marginBottom="5dp"
                     android:text="@string/quantity"
                     android:textColor="@color/gold"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/editQuantity"
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:autofillHints="name"
-                    android:background="#E61E1B18"
-                    android:hint="@string/coin_denomination_hint"
+                    android:layout_height="wrap_content"
+                    android:minHeight="52dp"
+                    android:background="@color/surface_color"
                     android:inputType="number"
-                    android:padding="10dp"
                     android:singleLine="true"
-                    android:text="@string/coin_denomination_hint"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#BDB49E" />
+                    android:text="1"
+                    android:padding="12dp"
+                    android:textColor="@color/text_color"
+                    android:importantForAutofill="no" />
 
             </LinearLayout>
         </LinearLayout>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="3dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="3"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/estimated_value"
             android:textColor="@color/gold"
-            android:textSize="13sp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <EditText
             android:id="@+id/editEstimatedValue"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="12dp"
-            android:autofillHints="name"
-            android:background="#E61E1B18"
+            android:layout_height="wrap_content"
+            android:minHeight="52dp"
+            android:layout_marginBottom="22dp"
+            android:background="@color/surface_color"
             android:hint="@string/estimated_value_hint"
             android:inputType="numberDecimal"
-            android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#BDB49E" />
+            android:padding="12dp"
+            android:textColor="@color/text_color"
+            android:textColorHint="@color/gold"
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/buttonSaveCoin"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="56dp"
             android:background="@drawable/button"
             android:text="@string/save_coin"
             android:textColor="@color/black"
-            android:textSize="17sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/button4"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="10dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/back_button"
-            android:scaleType="centerInside"
-            android:src="@drawable/back_arrow" />
     </LinearLayout>
 </ScrollView>

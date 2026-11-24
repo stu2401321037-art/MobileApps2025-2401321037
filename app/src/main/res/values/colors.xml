@@ -8,4 +8,13 @@
     <color name="button_end">#99D6B65C</color>
     <color name="button_border">#CCBA1F</color>
     <color name="gold">#A49211</color>
+    <color name="screen_bg">#F7F3EA</color>
+    <color name="panel_bg">#FFFFFF</color>
+    <color name="field_bg">#F0EBE1</color>
+    <color name="text_primary">#332E27</color>
+    <color name="text_secondary">#746D62</color>
+    <color name="label_accent">#957019</color>
+    <color name="button_bg">#B88B32</color>
+    <color name="button_text">#FFFFFF</color>
+    <color name="panel_stroke">#E4DBCA</color>
 </resources>

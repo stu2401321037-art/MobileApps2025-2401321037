@@ -38,4 +38,6 @@
         <item>F</item>
         <item>G</item>
     </string-array>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>
