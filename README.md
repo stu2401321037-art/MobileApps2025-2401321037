@@ -1,182 +1,249 @@
-
 # NumisTracker
 
-A native **offline-first numismatic collection manager** for Android, developed in Java. NumisTracker allows users to manage personal coin and banknote collections, record item details, capture photographs and store information locally using SQLite.
+**NumisTracker** is an offline-first Android application for managing personal coin and banknote collections. Developed in Java, the application allows users to organize their collections, manage item details, capture photographs, and store information locally using SQLite.
 
-> **Project status:** The application builds and runs successfully. CRUD operations, SQLite persistence, Material Design 3 theming, light/dark mode and camera functionality have been implemented and manually tested.
-
-> **Offline-first:** NumisTracker does not require an account, internet connection or remote server for its core features.
+The application uses an MVVM-based architecture with a Repository layer and manual Dependency Injection.
 
 ## 1. Idea
 
-Numismatic collectors often need a convenient way to organize their coins and banknotes, preserve details about individual items and document their collections with photographs.
+Numismatic collectors need a convenient way to organize their coins and banknotes, preserve identifying information, and document their collections with photographs.
 
-NumisTracker provides an Android application that combines these activities in one place. Users can maintain a personal catalog, manage item details, attach images and access their collection without an internet connection.
+NumisTracker provides a simple Android application that combines these activities in one place.
 
-The main goals are simplicity, reliable local storage, intuitive navigation and consistent visual design.
+The main goals of the project are:
+
+- Easy management of personal coin and banknote collections.
+- Reliable local data storage.
+- Full CRUD functionality.
+- Camera integration for photographing collectibles.
+- Intuitive navigation and a modern user interface.
+- Offline access without user registration.
 
 ## 2. How it works
 
-NumisTracker opens with a main screen providing access to Coins and Banknotes. Each section displays saved items with their details and photographs.
+NumisTracker opens with a main screen providing access to Coins and Banknotes. Each section displays saved items and their photographs.
 
-Users can add records using the "+" button, edit existing items or delete them after confirmation. Each record contains a country, year, denomination, currency, condition, quantity and estimated value. The item name is generated automatically.
+Users can add new items using the "+" button, edit existing records, or delete them after confirmation. Each item includes a country, year, denomination, currency, condition, quantity, and optional estimated value.
 
-The application supports complete Create, Read, Update and Delete (CRUD) operations.
+The application supports complete Create, Read, Update, and Delete operations.
 
-Users can capture photographs through Android Camera Intent. Images are stored in private application storage and linked to the corresponding SQLite records.
+Users can capture photographs using the device camera. Images are stored in private application storage and linked to SQLite records.
 
-Collection data remains available after restarting the application. The interface uses Material Design 3 with light and dark themes. Theme preferences are saved using SharedPreferences.
+Collection data persists after restarting the application. The interface supports light and dark themes, and the selected theme is remembered using SharedPreferences.
 
-No account or internet connection is required.
+No account or internet connection is required for normal application usage.
 
-## 3. Technologies / Architecture
+## 3. Technologies and Architecture
 
-| Part | Technology |
+| Component | Technology |
 |---|---|
-| Language | Java 11 |
+| Platform | Android |
+| Programming language | Java 11 |
 | Development environment | Android Studio |
-| SDK | `minSdk=24`, `compileSdk=37`, `targetSdk=37` |
-| UI | XML layouts + Material Design 3 |
-| Navigation | Activities + Intent |
-| Architecture | Activity-based architecture with SQLite data access |
-| Persistence | SQLite |
+| Minimum SDK | API 24 (Android 7.0) |
+| Compile SDK | API 37 |
+| Target SDK | API 37 |
+| UI | XML layouts and Material Design 3 |
+| Navigation | Activities and Intents |
+| Architecture | MVVM |
+| Data access | Repository Pattern |
+| Dependency Injection | Manual DI with AppContainer |
+| State management | ViewModel and LiveData |
+| Database | SQLite |
 | Database management | SQLiteOpenHelper |
-| Background operations | ExecutorService |
-| Theme persistence | SharedPreferences |
+| Background operations | Executor-based asynchronous operations |
 | Camera | ActivityResultContracts.TakePicture |
-| Image access | Android FileProvider |
+| Image access | FileProvider |
+| Theme preferences | SharedPreferences |
+| Unit testing | JUnit and Mockito |
+| UI testing | Espresso |
 | Build system | Gradle |
-| Version control | Git + GitHub |
+| Version control | Git and GitHub |
 
-### Project structure
+### Architecture Overview
+
+The application follows an MVVM-based architecture with separation between the presentation, business logic, and data access layers.
 
 ```text
-app/
-└── src/
-    └── main/
-        ├── java/
-        │   └── com/example/numistracker/
-        │       ├── MainScreen.java
-        │       ├── ItemsListActivity.java
-        │       ├── CoinsActivity.java
-        │       ├── banknotes.java
-        │       ├── PhotoCaptureHelper.java
-        │       └── data/
-        │           └── DatabaseHelper.java
-        │
-        ├── res/
-        │   ├── layout/
-        │   ├── drawable/
-        │   ├── values/
-        │   ├── values-night/
-        │   └── xml/
-        │
-        └── AndroidManifest.xml
+             Activities + XML Views
+                       |
+                       v
+             ViewModel Layer
+        +------------------------+
+        | ItemsViewModel         |
+        | FormViewModel          |
+        +------------------------+
+                       |
+                       v
+             Repository Layer
+                NumisRepository
+                       |
+                       v
+              DatabaseHelper
+                       |
+                       v
+                SQLite Database
+                  numistracker.db
 ```
 
-### Main components
+### Dependency Injection
+
+The application uses manual Dependency Injection through `AppContainer`.
+
+`AppContainer` provides shared instances of `DatabaseHelper` and `NumisRepository`.
+
+This reduces direct dependencies between UI components and the database layer.
+
+### Main Components
 
 | Component | Responsibility |
 |---|---|
 | MainScreen | Main navigation and theme selection |
 | ItemsListActivity | Displays coins and banknotes with Edit/Delete actions |
-| CoinsActivity | Coin creation, editing and validation |
-| banknotes | Banknote creation, editing and validation |
-| PhotoCaptureHelper | Camera integration and image handling |
-| DatabaseHelper | SQLite schema and CRUD operations |
+| CoinsActivity | Coin creation, editing, and input validation |
+| banknotes | Banknote creation, editing, and input validation |
+| ItemsViewModel | Collection loading, deletion, and UI state |
+| FormViewModel | Form data loading, insertion, updating, and saving |
+| NumisRepository | Data access and database operations |
+| DatabaseHelper | SQLite schema and CRUD implementation |
+| AppContainer | Manual Dependency Injection |
+| CollectionItem | Model representing collection items |
+| PhotoCaptureHelper | Camera integration and image preview |
 
-### Architecture
+### Project Structure
 
-The application currently uses an Activity-based architecture.
+```text
+NumisTracker/
+├── app/
+│   └── src/
+│       ├── main/
+│       │   ├── java/
+│       │   │   └── com/example/numistracker/
+│       │   │       ├── MainScreen.java
+│       │   │       ├── ItemsListActivity.java
+│       │   │       ├── CoinsActivity.java
+│       │   │       ├── banknotes.java
+│       │   │       ├── PhotoCaptureHelper.java
+│       │   │       ├── data/
+│       │   │       │   ├── DatabaseHelper.java
+│       │   │       │   └── NumisRepository.java
+│       │   │       ├── di/
+│       │   │       │   └── AppContainer.java
+│       │   │       ├── model/
+│       │   │       │   └── CollectionItem.java
+│       │   │       └── viewmodel/
+│       │   │           ├── ItemsViewModel.java
+│       │   │           └── FormViewModel.java
+│       │   ├── res/
+│       │   └── AndroidManifest.xml
+│       ├── test/
+│       │   └── java/
+│       │       └── com/example/numistracker/
+│       │           └── viewmodel/
+│       └── androidTest/
+│           └── java/
+│               └── com/example/numistracker/
+│                   └── CollectionNavigationTest.java
+├── apk/
+│   └── app-release.apk
+├── gradle/
+├── build.gradle.kts
+├── settings.gradle.kts
+└── README.md
+```
 
-Activities handle user interaction, navigation and presentation logic. DatabaseHelper provides the SQLite persistence layer, while ExecutorService performs database operations on background threads.
-
-A Repository layer is being introduced to separate data access from presentation logic.
-
-Full MVVM and Dependency Injection are planned improvements and are not currently claimed as completed functionality.
-
-## 4. User flow
+## 4. User Flow
 
 1. Launch NumisTracker.
 2. Select Coins or Banknotes from the main screen.
 3. View the existing collection.
 4. Press "+" to create a new record.
-5. Enter the item's country, year, denomination, currency, condition, quantity and estimated value.
-6. Optionally capture photographs using the device camera.
+5. Enter the item's details:
+   - Country
+   - Year
+   - Denomination
+   - Currency
+   - Condition
+   - Quantity
+   - Estimated value
+6. Optionally capture a photograph using the device camera.
 7. Press Save Coin or Save Banknote.
 8. Return to the collection list and view the saved item.
-9. Use Edit to update its information.
+9. Use Edit to update an existing record.
 10. Use Delete to remove an item after confirmation.
 11. Switch between light and dark themes from the main screen.
 
 All saved records remain available after restarting the application.
 
-## 5. How to run
+## 5. How to Run
 
 ### Requirements
 
 - Android Studio
 - Android SDK 37
-- Java 11 language compatibility
+- Java 11 source compatibility
 - Android emulator or physical Android device
-- Android 7.0 or newer (API 24+)
+- Android 7.0 (API 24) or newer
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the GitHub repository:
 
-   ```bash
-   git clone https://github.com/RadoR7/MobileApps2026-2401321026.git
-   ```
+```bash
+git clone https://github.com/RadoR7/MobileApps2026-2401321026.git
+```
 
 2. Switch to the development branch:
 
-   ```bash
-   git checkout develop
-   ```
+```bash
+cd MobileApps2026-2401321026
+git checkout develop
+```
 
 3. Open the NumisTracker project directory in Android Studio.
 
 4. Wait for Gradle synchronization to complete.
 
-5. Select an Android emulator or connect a physical device.
+5. Select an Android emulator or connect a physical Android device.
 
-6. Click **Run** to build and launch the application.
+6. Click Run to build and launch the application.
 
 ### Building
 
-Build the project using Android Studio:
+To compile the Debug version, execute:
 
-`Build -> Make Project`
+```powershell
+.\gradlew.bat :app:assembleDebug
+```
 
-Generate a debug APK:
+The generated Debug APK is normally located at:
 
-`Build -> Build APK(s)`
+```text
+app/build/outputs/apk/debug/app-debug.apk
+```
 
-The debug APK is normally generated at:
-
-`app/build/outputs/apk/debug/app-debug.apk`
-
-An internet connection may be necessary during the initial Gradle dependency setup. Normal application usage does not require internet access.
+The application works offline. Internet access may be required only for the initial Gradle dependency download.
 
 ## 6. Database and CRUD
 
 NumisTracker uses a local SQLite database:
 
-`numistracker.db`
+```text
+numistracker.db
+```
 
-DatabaseHelper extends SQLiteOpenHelper and manages the database schema, relationships and operations.
+The database is managed through `DatabaseHelper` and accessed through `NumisRepository`.
 
-### Database tables
+### Database Tables
 
 | Table | Description |
 |---|---|
-| coins | Stores collected coin information |
-| banknotes | Stores collected banknote information |
-| coin_images | Stores image references associated with coins |
-| banknote_images | Stores image references associated with banknotes |
+| coins | Stores coin information |
+| banknotes | Stores banknote information |
+| coin_images | Stores references to coin photographs |
+| banknote_images | Stores references to banknote photographs |
 
-### CRUD functionality
+### CRUD Functionality
 
 | Operation | Coins | Banknotes |
 |---|---|---|
@@ -185,100 +252,227 @@ DatabaseHelper extends SQLiteOpenHelper and manages the database schema, relatio
 | Update | Edit an existing coin | Edit an existing banknote |
 | Delete | Delete a coin | Delete a banknote |
 
-### Data validation
+### Data Validation
 
-Before saving a record, the application validates user input:
+The application validates user input before saving records.
 
-- Required fields must not be empty.
+Validation rules include:
+
+- Required fields cannot be empty.
 - Year must be a positive integer.
 - Denomination must be a positive number.
 - Quantity must be at least 1.
 - Estimated value cannot be negative.
-- A valid condition must be selected.
+- A condition must be selected.
 
-### Image storage
+### Image Storage
 
-Photographs are stored in the application's private file directory.
+Photographs are captured using the Android camera.
 
-The SQLite image tables store references linking image files to their corresponding coins or banknotes.
+Images are stored in the application's private file storage.
 
-### Persistence
+SQLite stores the file paths linking photographs to the corresponding coins or banknotes.
 
-All records remain stored locally after the application is closed and restarted.
+### Data Persistence
 
-The application does not depend on an external database or cloud service.
+All collection records remain stored locally after closing and restarting the application.
 
-## 7. Tests / Quality
+No external database or remote server is required.
 
-### Manual tests
+## 7. Tests and Quality
 
-| Test | Expected result |
+### Manual Testing
+
+The following functionality has been manually verified:
+
+| Test | Result |
 |---|---|
-| Application launch | Main screen opens successfully |
-| Coins navigation | Coins list opens |
-| Banknotes navigation | Banknotes list opens |
-| Create coin | New coin appears in the list |
-| Create banknote | New banknote appears in the list |
-| Edit coin | Existing coin is updated |
-| Edit banknote | Existing banknote is updated |
-| Delete coin | Coin is deleted after confirmation |
-| Delete banknote | Banknote is deleted after confirmation |
-| Application restart | Saved records remain available |
-| Theme switching | Light/dark mode changes correctly |
-| Theme persistence | Selected theme remains after restart |
-| Camera launch | Device camera opens |
-| Photo capture | Captured image is previewed |
-| Image persistence | Saved image is associated with the item |
-| Image display | Image appears in the collection list |
+| Application launch | Passed |
+| Coins navigation | Passed |
+| Banknotes navigation | Passed |
+| Create coin | Passed |
+| Create banknote | Passed |
+| Edit coin | Passed |
+| Edit banknote | Passed |
+| Delete coin | Passed |
+| Delete banknote | Passed |
+| SQLite persistence | Passed |
+| Theme switching | Passed |
+| Theme persistence | Passed |
+| Camera launch | Passed |
+| Photo capture | Passed |
+| Image storage | Passed |
+| Image display | Passed |
 
-### Automated tests
+### Unit Tests
 
-The project includes dependencies for JUnit and AndroidX Espresso.
+The project includes automated Unit tests using JUnit and Mockito.
 
-Automated unit test coverage and UI test execution have not yet been verified.
+The tests verify operations involving the ViewModel and Repository layers, including:
 
-Planned quality improvements:
+- Loading collection data.
+- Inserting records.
+- Updating existing records.
+- Deleting records.
+- Handling unsuccessful operations.
+- Handling data access errors.
 
-- JUnit tests for input validation.
-- Unit tests for data processing.
-- Repository tests.
-- At least one Espresso UI test.
-- Measurement of at least 15% unit test coverage.
+The Unit tests have been executed successfully.
 
-Manual tests are not a substitute for automated test coverage.
+Run Unit tests using:
 
-## 8. Test accounts
+```powershell
+.\gradlew.bat :app:testDebugUnitTest
+```
 
-NumisTracker does not implement user authentication.
+Unit test results can be found at:
 
-No test accounts, usernames or passwords are required.
+```text
+app/build/reports/tests/testDebugUnitTest/index.html
+```
 
-All available functionality can be accessed immediately after installation.
+### Espresso UI Tests
 
-## 9. APK
+The project also includes automated Espresso UI tests.
 
-**Required submission path:** `/apk/app-release.apk`
+`CollectionNavigationTest.java` checks:
 
-### Download
+- Navigation from the Coins list to the coin creation form.
+- Navigation from the Banknotes list to the banknote creation form.
 
-[Download NumisTracker APK](apk/app-release.apk)
+The Espresso tests have been executed successfully on an Android API 37 emulator.
 
-The download link becomes available after the signed release APK is generated and uploaded to the repository.
+Run UI tests using:
 
-### Generate a signed release APK
+```powershell
+.\gradlew.bat :app:connectedDebugAndroidTest
+```
 
-1. Open the project in Android Studio.
-2. Select **Build -> Generate Signed App Bundle or APK**.
-3. Choose **APK**.
+UI test results can be found at:
+
+```text
+app/build/reports/androidTests/connected/debug/index.html
+```
+
+### Code Coverage
+
+Code coverage has been measured using Android Studio.
+
+The last confirmed overall result was:
+
+| Metric | Coverage |
+|---|---|
+| Class Coverage | 23% |
+| Method Coverage | 10% |
+| Line Coverage | 5% |
+| Branch Coverage | 5% |
+
+Additional tests have been prepared to improve coverage, but a newer overall coverage measurement has not yet been confirmed.
+
+The project's course target is at least 15% automated test coverage.
+
+## 8. Test Accounts
+
+NumisTracker does not require authentication.
+
+There is no login or registration system.
+
+No test usernames or passwords are necessary.
+
+All functionality is available immediately after installing the application.
+
+## 9. Screenshots
+
+Screenshots of the application can be added to the `screenshots/` directory.
+
+Recommended screenshots include:
+
+- Main screen
+- Coins collection
+- Banknotes collection
+- Add/Edit coin form
+- Add/Edit banknote form
+- Camera and photo preview
+- Light mode
+- Dark mode
+
+## 10. Release APK
+
+A signed Release APK has been generated for NumisTracker.
+
+### Download APK
+
+**[Download NumisTracker APK](apk/app-release.apk)**
+
+APK location in the repository:
+
+```text
+apk/app-release.apk
+```
+
+### Generate a Signed APK
+
+1. Open NumisTracker in Android Studio.
+2. Select Build → Generate Signed App Bundle or APK.
+3. Choose APK.
 4. Select or create a signing key.
 5. Select the release build variant.
-6. Complete the build process.
+6. Complete the signing process.
 7. Locate the generated APK.
-8. Copy it into the repository's `/apk` directory.
-9. Rename it to `app-release.apk` if necessary.
-10. Commit and push the APK to GitHub.
 
-Do not commit private keystores or signing passwords.
+### Security
 
-**Submission status:** The APK must be generated, installed and verified before final submission.
----
+The private signing key and passwords must not be uploaded to GitHub.
+
+The keystore should be stored securely outside the repository.
+
+## 11. GitHub Repository and Submission
+
+**Repository:**
+
+[MobileApps2026-2401321026](https://github.com/RadoR7/MobileApps2026-2401321026)
+
+**Development branch:**
+
+[develop](https://github.com/RadoR7/MobileApps2026-2401321026/tree/develop)
+
+**APK path:**
+
+```text
+apk/app-release.apk
+```
+
+The submitted project includes:
+
+- Android application source code
+- XML layouts and application resources
+- SQLite database implementation
+- MVVM architecture
+- Repository and Dependency Injection
+- Camera functionality
+- Unit tests
+- Espresso UI tests
+- Signed Release APK
+- README documentation
+
+## 12. Known Limitations and Future Improvements
+
+NumisTracker currently focuses on offline collection management.
+
+The application does not include cloud synchronization or user accounts.
+
+Potential future improvements include:
+
+- Collection search and filtering.
+- Exporting and importing collections.
+- Cloud backup and synchronization.
+- Additional photo management features.
+- More automated tests and improved code coverage.
+
+## Conclusion
+
+NumisTracker is a functional Android application for managing personal coin and banknote collections.
+
+It combines SQLite persistence, complete CRUD operations, camera integration, Material Design 3, light/dark themes, and an MVVM-based architecture.
+
+The project also includes automated JUnit and Espresso tests and a signed Release APK for installation.
