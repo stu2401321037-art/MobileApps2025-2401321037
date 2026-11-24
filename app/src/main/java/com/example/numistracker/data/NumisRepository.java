@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
+import com.example.numistracker.model.CollectionStats;
 
 public class NumisRepository {
     private final DatabaseHelper dbHelper;
@@ -97,5 +98,12 @@ public class NumisRepository {
             if (result < 0) throw new IllegalStateException("Could not save photo");
             existing.add(path);
         }
+    }
+
+    public CollectionStats getCollectionStats() {
+        return new CollectionStats(
+                dbHelper.getCoinTypeCount(),
+                dbHelper.getBanknoteTypeCount()
+        );
     }
 }

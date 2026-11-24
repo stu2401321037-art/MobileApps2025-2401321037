@@ -1,4 +1,3 @@
-
 package com.example.numistracker.data;
 
 import android.content.ContentValues;
@@ -6,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.DatabaseUtils;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -483,5 +483,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 .replace("\\", "\\\\")
                 .replace("%", "\\%")
                 .replace("_", "\\_");
+    }
+    public int getCoinTypeCount() {
+        return (int) DatabaseUtils.queryNumEntries(
+                getReadableDatabase(),
+                TABLE_COINS
+        );
+    }
+
+    public int getBanknoteTypeCount() {
+        return (int) DatabaseUtils.queryNumEntries(
+                getReadableDatabase(),
+                TABLE_BANKNOTES
+        );
     }
 }
