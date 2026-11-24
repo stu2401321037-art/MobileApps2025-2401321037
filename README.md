@@ -1,3 +1,4 @@
+
 # NumisTracker
 
 **NumisTracker** is an offline-first Android application for managing personal coin and banknote collections. Developed in Java, the application allows users to organize their collections, manage item details, capture photographs, and store information locally using SQLite.
@@ -68,22 +69,22 @@ The application follows an MVVM-based architecture with separation between the p
              Activities + XML Views
                        |
                        v
-             ViewModel Layer
-        +------------------------+
-        | ItemsViewModel         |
-        | FormViewModel          |
-        +------------------------+
+               ViewModel Layer
+          +------------------------+
+          | ItemsViewModel         |
+          | FormViewModel          |
+          +------------------------+
                        |
                        v
-             Repository Layer
-                NumisRepository
+               Repository Layer
+                 NumisRepository
                        |
                        v
-              DatabaseHelper
+                 DatabaseHelper
                        |
                        v
-                SQLite Database
-                  numistracker.db
+                  SQLite Database
+                   numistracker.db
 ```
 
 ### Dependency Injection
@@ -139,6 +140,7 @@ NumisTracker/
 │       ├── test/
 │       │   └── java/
 │       │       └── com/example/numistracker/
+│       │           ├── data/
 │       │           └── viewmodel/
 │       └── androidTest/
 │           └── java/
@@ -190,13 +192,13 @@ All saved records remain available after restarting the application.
 1. Clone the GitHub repository:
 
 ```bash
-git clone https://github.com/RadoR7/MobileApps2026-2401321026.git
+git clone https://github.com/stu2401321037-art/MobileApps2025-2401321037.git
 ```
 
 2. Switch to the development branch:
 
 ```bash
-cd MobileApps2026-2401321026
+cd MobileApps2025-2401321037
 git checkout develop
 ```
 
@@ -210,7 +212,7 @@ git checkout develop
 
 ### Building
 
-To compile the Debug version, execute:
+To compile the Debug version, execute the following command from the Android project directory:
 
 ```powershell
 .\gradlew.bat :app:assembleDebug
@@ -271,7 +273,7 @@ Photographs are captured using the Android camera.
 
 Images are stored in the application's private file storage.
 
-SQLite stores the file paths linking photographs to the corresponding coins or banknotes.
+SQLite stores the file paths linking photographs to their corresponding coins or banknotes.
 
 ### Data Persistence
 
@@ -317,7 +319,7 @@ The tests verify operations involving the ViewModel and Repository layers, inclu
 - Handling unsuccessful operations.
 - Handling data access errors.
 
-The Unit tests have been executed successfully.
+Unit tests have been executed successfully.
 
 Run Unit tests using:
 
@@ -333,9 +335,9 @@ app/build/reports/tests/testDebugUnitTest/index.html
 
 ### Espresso UI Tests
 
-The project also includes automated Espresso UI tests.
+The project includes automated Espresso UI tests.
 
-`CollectionNavigationTest.java` checks:
+`CollectionNavigationTest.java` verifies:
 
 - Navigation from the Coins list to the coin creation form.
 - Navigation from the Banknotes list to the banknote creation form.
@@ -367,9 +369,9 @@ The last confirmed overall result was:
 | Line Coverage | 5% |
 | Branch Coverage | 5% |
 
-Additional tests have been prepared to improve coverage, but a newer overall coverage measurement has not yet been confirmed.
+Additional Unit tests have been prepared to improve coverage. A newer overall coverage measurement has not yet been confirmed.
 
-The project's course target is at least 15% automated test coverage.
+The course target is at least 15% automated test coverage.
 
 ## 8. Test Accounts
 
@@ -379,7 +381,7 @@ There is no login or registration system.
 
 No test usernames or passwords are necessary.
 
-All functionality is available immediately after installing the application.
+All functionality is available immediately after installation.
 
 ## 9. Screenshots
 
@@ -402,7 +404,7 @@ A signed Release APK has been generated for NumisTracker.
 
 ### Download APK
 
-**[Download NumisTracker APK](apk/app-release.apk)**
+[Download NumisTracker APK](apk/app-release.apk)
 
 APK location in the repository:
 
@@ -430,11 +432,11 @@ The keystore should be stored securely outside the repository.
 
 **Repository:**
 
-[MobileApps2026-2401321026](https://github.com/RadoR7/MobileApps2026-2401321026)
+[MobileApps2025-2401321037](https://github.com/stu2401321037-art/MobileApps2025-2401321037)
 
 **Development branch:**
 
-[develop](https://github.com/RadoR7/MobileApps2026-2401321026/tree/develop)
+[develop](https://github.com/stu2401321037-art/MobileApps2025-2401321037/tree/develop)
 
 **APK path:**
 
