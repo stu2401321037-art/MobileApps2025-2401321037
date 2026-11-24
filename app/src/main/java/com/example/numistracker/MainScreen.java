@@ -104,6 +104,14 @@ public class MainScreen extends AppCompatActivity {
                 }
         );
 
+
+        findViewById(R.id.button3).setOnClickListener(v -> {
+            startActivity(new android.content.Intent(
+                    MainScreen.this,
+                    CollectionActivity.class
+            ));
+        });
+
         setupWindowInsets();
     }
 

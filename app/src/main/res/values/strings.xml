@@ -40,4 +40,13 @@
     </string-array>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
+    <string name="stats_title">Collections</string>
+    <string name="stats_subtitle">Collection statistics by type</string>
+    <string name="stats_total_title">Total types</string>
+     <string name="stats_coin_types">Coin types</string>
+    <string name="stats_banknote_types">Banknote types</string>
+    <string name="stats_empty">No coin or banknote types added yet</string>
+    <string name="stats_chart_description">Pie chart showing the percentage of coin and banknote types</string>
+    <string name="stats_note">Each saved coin or banknote record counts as one type,regardless of quantity. Physical copies are not counted.</string>
+    <string name="stats_back">Back</string>
 </resources>
